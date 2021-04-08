@@ -15,7 +15,7 @@ type deck []*cardColumn
 func valueOfBits(bits ...int) int {
 	v := 0
 	for _, bit := range bits {
-		v = v | 1<<bit
+		v |= 1 << bit
 	}
 	return v
 }
@@ -74,7 +74,7 @@ var cardColumns = []*cardColumn{
 
 	{'&', valueOfBits(11)},
 	{'-', valueOfBits(12)},
-	{',', valueOfBits(2, 8)},
+	{':', valueOfBits(2, 8)},
 	{'#', valueOfBits(3, 8)},
 	{'@', valueOfBits(4, 8)},
 	{'\'', valueOfBits(5, 8)},
@@ -108,39 +108,6 @@ func getBits(v int) []int {
 		}
 	}
 	return bits
-}
-
-func checkNoNeighbor(deck deck) bool {
-	for i := range deck {
-		if i+1 >= len(deck) {
-			break
-		}
-		bits := getBits(deck[i].code)
-		for _, bit := range bits {
-			if hasBit(deck[i+1].code, bit) {
-				return false
-			}
-		}
-	}
-	return true
-}
-
-func checkRoad(deck deck, start int) bool {
-	if !hasBit(deck[0].code, start) {
-		return false
-	}
-	if len(deck) < 2 {
-		return true
-	}
-	next := deck[1]
-	if roads := next.hasRoads(start); len(roads) > 0 {
-		for _, r := range roads {
-			if checkRoad(deck[1:], r) {
-				return true
-			}
-		}
-	}
-	return false
 }
 
 func (c *cardColumn) hasNeighbor(t *cardColumn) bool {
@@ -181,6 +148,16 @@ func (d deck) hasCode(c *cardColumn) bool {
 	return false
 }
 
+func copyMapExcept(m map[byte]*cardColumn, c byte) map[byte]*cardColumn {
+	ret := make(map[byte]*cardColumn)
+	for k, v := range m {
+		if k != c {
+			ret[k] = v
+		}
+	}
+	return ret
+}
+
 func (d deck) doCode(availables map[byte]*cardColumn, start int) (deck, map[byte]*cardColumn, error) {
 	fmt.Printf("%s\n", d.string())
 	if len(availables) == 0 {
@@ -190,18 +167,16 @@ func (d deck) doCode(availables map[byte]*cardColumn, start int) (deck, map[byte
 		return nil, nil, fmt.Errorf("B is hardcoded here")
 	}
 	for _, c := range availables {
-		if d[len(d)-1].hasNeighbor(c) {
+		if len(d) > 0 && d[len(d)-1].hasNeighbor(c) {
 			continue
 		}
 		if roads := c.hasRoads(start); len(roads) > 0 {
-			delete(availables, c.c)
 			newDeck := append(d, c)
 			for _, r := range roads {
-				dd, aa, err := newDeck.doCode(availables, r)
+				dd, aa, err := newDeck.doCode(copyMapExcept(availables, c.c), r)
 				if err == nil {
 					return dd, aa, nil
 				}
-				availables[c.c] = c
 			}
 		}
 	}
@@ -209,7 +184,7 @@ func (d deck) doCode(availables map[byte]*cardColumn, start int) (deck, map[byte
 }
 
 func main() {
-	deck := deck{
+	d := deck{
 		codeFor('A'),
 		codeFor('2'),
 		codeFor('3'),
@@ -219,15 +194,15 @@ func main() {
 	}
 	availableCode := make(map[byte]*cardColumn)
 	for _, c := range cardColumns {
-		if !deck.hasCode(c) {
+		if !d.hasCode(c) {
 			availableCode[c.c] = c
 		}
 	}
 
-	deck, _, err := deck.doCode(availableCode, 4)
+	d, _, err := d.doCode(availableCode, 4)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed: %+v\n", err)
 		return
 	}
-	fmt.Printf("%s\n", deck.string())
+	fmt.Printf("%s\n", d.string())
 }
