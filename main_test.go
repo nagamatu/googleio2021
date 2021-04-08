@@ -104,17 +104,17 @@ func (t *mainTestSuite) Test_doCode() {
 		codeFor('D'),
 	}
 
-	//A2345D#B/!1KT
+	//A2345D$B/KC*V67,:
 	availableCode := map[byte]*cardColumn{
-		'L': codeFor('L'),
+		'$': codeFor('$'),
 		'B': codeFor('B'),
-		'#': codeFor('#'),
-		'@': codeFor('@'),
-		'N': codeFor('N'),
+		'/': codeFor('/'),
+		'K': codeFor('K'),
+		'C': codeFor('C'),
 	}
 	actual, _, err := d.doCode(availableCode, 4, up, 1)
-	t.Assert().NoError(err, "A2345D#BL@N")
-	t.Assert().Equal("A2345D#BL@N", actual.string(), "A2345D#BL@N")
+	t.Assert().NoError(err, "A2345D$B/KC")
+	t.Assert().Equal("A2345D$B/KC", actual.string(), "A2345D$B/KC")
 
 	availableCode = map[byte]*cardColumn{
 		'L': codeFor('L'),
@@ -166,7 +166,7 @@ func (t *mainTestSuite) Test_hasNeighbor() {
 			true,
 		},
 	} {
-		t.Assert().Equal(testdata.value, testdata.c0.hasNeighbor(testdata.c1))
+		t.Assert().Equal(testdata.value, testdata.c0.hasNeighbor(testdata.c1), fmt.Sprintf("%c %c", testdata.c0.c, testdata.c1.c))
 	}
 }
 

@@ -112,13 +112,7 @@ func getBits(v int) []int {
 }
 
 func (c *cardColumn) hasNeighbor(t *cardColumn) bool {
-	bits := getBits(c.code)
-	for _, bit := range bits {
-		if hasBit(t.code, bit) {
-			return true
-		}
-	}
-	return false
+	return (c.code & t.code) != 0
 }
 
 func (c *cardColumn) hasRoads(start int) []int {
@@ -162,7 +156,7 @@ func copyMapExcept(m map[byte]*cardColumn, c byte) map[byte]*cardColumn {
 const (
 	up             = -1
 	down           = 1
-	maxSwitchCount = 9
+	maxSwitchCount = 3
 )
 
 func getDirection(cur, next int) int {
@@ -205,7 +199,11 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 				nextDir := getDirection(start, r)
 				count := switchCount
 				if dir != nextDir {
-					count++
+					if start == 1 || start == 9 {
+						count++
+					} else {
+						count += 10
+					}
 				}
 				dd, aa, err := newDeck.doCode(copyMapExcept(availables, c.c), r, nextDir, count)
 				if err == nil {
