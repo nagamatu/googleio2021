@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 )
 
 type cardColumn struct {
@@ -171,8 +172,20 @@ func getDirection(cur, next int) int {
 	return up
 }
 
+const logRateLimitSeconds = 1000 * 1000 * 1000
+
+var lastLogTime time.Time = time.Now()
+
+func log(msg string) {
+	now := time.Now()
+	if now.Sub(lastLogTime) > time.Duration(logRateLimitSeconds) {
+		fmt.Printf("%s\n", msg)
+		lastLogTime = now
+	}
+}
+
 func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount int) (deck, map[byte]*cardColumn, error) {
-	fmt.Printf("%s\n", d.string())
+	log(d.string())
 	if len(availables) == 0 {
 		return d, availables, nil
 	}
