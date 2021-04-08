@@ -1,4 +1,4 @@
-name: golang_ci
+name: gotest
 on: [push]
 
 jobs:
@@ -20,9 +20,7 @@ jobs:
           key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
             ${{ runner.os }}-go-
-      - name: install lint
-        run: curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh -s -- -b $(go env GOPATH)/bin v1.18.0
-      - name: lint
-        run: golangci-lint run
       - name: test
-        run: go test ./... -v -cover
+        run: go test ./... -v -cover -coverprofile=/tmp/gotest_profile.out
+      - name: report
+        run: go tool cover -func=/tmp/gotest_profile.out

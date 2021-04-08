@@ -69,7 +69,6 @@ linters:
     - bodyclose
     - deadcode
     - depguard
-    - dogsled
     - dupl
     - errcheck
     - exportloopref
@@ -119,6 +118,7 @@ linters:
   # - testpackage
   # - revive
   # - wsl
+  # - dogsled
 
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source
