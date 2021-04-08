@@ -164,7 +164,7 @@ func (d deck) doCode(availables map[byte]*cardColumn, start int) (deck, map[byte
 		return d, availables, nil
 	}
 	if len(d) >= 8 && d[7].code != codeFor('B').code {
-		return nil, nil, fmt.Errorf("B is hardcoded here")
+		return nil, nil, fmt.Errorf("7th code must be 'B'")
 	}
 	for _, c := range availables {
 		if len(d) > 0 && d[len(d)-1].hasNeighbor(c) {
