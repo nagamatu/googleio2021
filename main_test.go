@@ -112,7 +112,7 @@ func (t *mainTestSuite) Test_doCode() {
 		'@': codeFor('@'),
 		'N': codeFor('N'),
 	}
-	actual, _, err := d.doCode(availableCode, 4)
+	actual, _, err := d.doCode(availableCode, 4, up, 1)
 	t.Assert().NoError(err, "A2345D#BL@N")
 	t.Assert().Equal("A2345D#BL@N", actual.string(), "A2345D#BL@N")
 
@@ -123,7 +123,7 @@ func (t *mainTestSuite) Test_doCode() {
 		'N': codeFor('N'),
 		',': codeFor(','),
 	}
-	_, _, err = d.doCode(availableCode, 4)
+	_, _, err = d.doCode(availableCode, 4, up, 1)
 	t.Assert().Error(err, "No deck found")
 }
 
@@ -153,6 +153,16 @@ func (t *mainTestSuite) Test_hasNeighbor() {
 		{
 			codeFor('B'),
 			codeFor('S'),
+			true,
+		},
+		{
+			codeFor('"'),
+			codeFor('|'),
+			true,
+		},
+		{
+			codeFor('|'),
+			codeFor('*'),
 			true,
 		},
 	} {

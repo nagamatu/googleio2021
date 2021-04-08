@@ -158,10 +158,26 @@ func copyMapExcept(m map[byte]*cardColumn, c byte) map[byte]*cardColumn {
 	return ret
 }
 
-func (d deck) doCode(availables map[byte]*cardColumn, start int) (deck, map[byte]*cardColumn, error) {
+const (
+	up   = -1
+	down = 1
+)
+
+func getDirection(cur, next int) int {
+	if cur < next {
+		return down
+	} else {
+		return up
+	}
+}
+
+func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount int) (deck, map[byte]*cardColumn, error) {
 	fmt.Printf("%s\n", d.string())
 	if len(availables) == 0 {
 		return d, availables, nil
+	}
+	if switchCount >= 9 {
+		return nil, nil, fmt.Errorf("too many direction switch")
 	}
 	if len(d) >= 8 && d[7].code != codeFor('B').code {
 		return nil, nil, fmt.Errorf("7th code must be 'B'")
@@ -173,7 +189,12 @@ func (d deck) doCode(availables map[byte]*cardColumn, start int) (deck, map[byte
 		if roads := c.hasRoads(start); len(roads) > 0 {
 			newDeck := append(d, c)
 			for _, r := range roads {
-				dd, aa, err := newDeck.doCode(copyMapExcept(availables, c.c), r)
+				nextDir := getDirection(start, r)
+				count := switchCount
+				if dir != nextDir {
+					count++
+				}
+				dd, aa, err := newDeck.doCode(copyMapExcept(availables, c.c), r, nextDir, count)
 				if err == nil {
 					return dd, aa, nil
 				}
@@ -199,7 +220,7 @@ func main() {
 		}
 	}
 
-	d, _, err := d.doCode(availableCode, 4)
+	d, _, err := d.doCode(availableCode, 4, up, 1)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed: %+v\n", err)
 		return
