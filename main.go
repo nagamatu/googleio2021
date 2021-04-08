@@ -176,16 +176,16 @@ const logRateLimitSeconds = 1000 * 1000 * 1000
 
 var lastLogTime time.Time = time.Now()
 
-func log(msg string) {
+func (d deck) log() {
 	now := time.Now()
 	if now.Sub(lastLogTime) > time.Duration(logRateLimitSeconds) {
-		fmt.Printf("%s\n", msg)
+		d.showDeck()
 		lastLogTime = now
 	}
 }
 
 func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount int) (deck, map[byte]*cardColumn, error) {
-	log(d.string())
+	d.log()
 	if len(availables) == 0 {
 		return d, availables, nil
 	}
@@ -217,6 +217,29 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 	return nil, nil, fmt.Errorf("no deck available")
 }
 
+func (d deck) showDeck() {
+	fmt.Printf("%s\n", d.string())
+	for _, c := range d {
+		fmt.Printf("%c: ", c.c)
+		bits := getBits(c.code)
+		for i := 0; i < 13; i++ {
+			found := false
+			for _, bit := range bits {
+				if i == bit {
+					found = true
+					break
+				}
+			}
+			if found {
+				fmt.Printf("* ")
+			} else {
+				fmt.Printf(". ")
+			}
+		}
+		fmt.Printf("\n")
+	}
+}
+
 func main() {
 	d := deck{
 		codeFor('A'),
@@ -238,5 +261,5 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Failed: %+v\n", err)
 		return
 	}
-	fmt.Printf("%s\n", d.string())
+	d.showDeck()
 }
