@@ -156,7 +156,7 @@ func copyMapExcept(m map[byte]*cardColumn, c byte) map[byte]*cardColumn {
 const (
 	up             = -1
 	down           = 1
-	maxSwitchCount = 3
+	maxSwitchCount = 9
 )
 
 func getDirection(cur, next int) int {
