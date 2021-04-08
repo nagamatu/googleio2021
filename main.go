@@ -159,16 +159,16 @@ func copyMapExcept(m map[byte]*cardColumn, c byte) map[byte]*cardColumn {
 }
 
 const (
-	up   = -1
-	down = 1
+	up             = -1
+	down           = 1
+	maxSwitchCount = 9
 )
 
 func getDirection(cur, next int) int {
 	if cur < next {
 		return down
-	} else {
-		return up
 	}
+	return up
 }
 
 func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount int) (deck, map[byte]*cardColumn, error) {
@@ -176,7 +176,7 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 	if len(availables) == 0 {
 		return d, availables, nil
 	}
-	if switchCount >= 9 {
+	if switchCount >= maxSwitchCount {
 		return nil, nil, fmt.Errorf("too many direction switch")
 	}
 	if len(d) >= 8 && d[7].code != codeFor('B').code {
