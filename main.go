@@ -157,6 +157,8 @@ const (
 	up             = -1
 	down           = 1
 	maxSwitchCount = 9
+	allowDown      = 3
+	allowUp        = 11
 )
 
 func getDirection(cur, next int) int {
@@ -176,6 +178,25 @@ func (d deck) log() {
 		d.showDeck()
 		lastLogTime = now
 	}
+}
+
+func switchCost(cost, pos, dir, nextDir int) int {
+	if dir != nextDir {
+		if nextDir == down {
+			if pos == allowDown {
+				cost++
+			} else {
+				cost += 10
+			}
+		} else {
+			if pos == allowUp {
+				cost++
+			} else {
+				cost += 10
+			}
+		}
+	}
+	return cost
 }
 
 func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount int) (deck, map[byte]*cardColumn, error) {
@@ -200,13 +221,13 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 				count := switchCount
 				if dir != nextDir {
 					if nextDir == down {
-						if start >= 4 {
-							count += 10
-						} else {
+						if start == allowDown {
 							count++
+						} else {
+							count += 10
 						}
 					} else {
-						if start == 11 {
+						if start == allowUp {
 							count++
 						} else {
 							count += 10
@@ -221,6 +242,15 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 		}
 	}
 	return nil, nil, fmt.Errorf("no deck available")
+}
+
+func newDeck(s string) deck {
+	b := []byte(s)
+	d := deck{}
+	for _, c := range b {
+		d = append(d, codeFor(c))
+	}
+	return d
 }
 
 func (d deck) showDeck() {
@@ -247,14 +277,7 @@ func (d deck) showDeck() {
 }
 
 func main() {
-	d := deck{
-		codeFor('A'),
-		codeFor('2'),
-		codeFor('3'),
-		codeFor('4'),
-		codeFor('5'),
-		codeFor('D'),
-	}
+	d := newDeck("A2345D")
 	availableCode := make(map[byte]*cardColumn)
 	for _, c := range cardColumns {
 		if !d.hasCode(c) {

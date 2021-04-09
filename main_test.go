@@ -68,26 +68,12 @@ func (t *mainTestSuite) Test_codeFor() {
 }
 
 func (t *mainTestSuite) Test_string() {
-	d := deck{
-		codeFor('A'),
-		codeFor('2'),
-		codeFor('3'),
-		codeFor('4'),
-		codeFor('5'),
-		codeFor('D'),
-	}
+	d := newDeck("A2345D")
 	t.Assert().Equal("A2345D", d.string())
 }
 
 func (t *mainTestSuite) Test_hasCode() {
-	d := deck{
-		codeFor('A'),
-		codeFor('2'),
-		codeFor('3'),
-		codeFor('4'),
-		codeFor('5'),
-		codeFor('D'),
-	}
+	d := newDeck("A2345D")
 	for _, c := range d {
 		t.Assert().True(d.hasCode(c))
 	}
@@ -95,14 +81,7 @@ func (t *mainTestSuite) Test_hasCode() {
 }
 
 func (t *mainTestSuite) Test_doCode() {
-	d := deck{
-		codeFor('A'),
-		codeFor('2'),
-		codeFor('3'),
-		codeFor('4'),
-		codeFor('5'),
-		codeFor('D'),
-	}
+	d := newDeck("A2345D")
 
 	//A2345D$B/KC*V67,:
 	availableCode := map[byte]*cardColumn{
@@ -132,8 +111,12 @@ func (t *mainTestSuite) Test_doCode() {
 		'Y': codeFor('Y'),
 	}
 	actual, _, err = d.doCode(availableCode, 6, up, 1)
-	t.Assert().NoError(err, "A2345D,B/KC*V67YI$")
-	t.Assert().Equal("A2345D,B/KC*V67YI$", actual.string(), "A2345D,B/KC*V67YI$")
+	t.Assert().NoError(err)
+	t.Assert().True(actual.string() == "A2345D,B/KC*V67YI$" ||
+		actual.string() == "A2345D$B/KC*V67YI," ||
+		actual.string() == "A2345D$B/KC*V67,IY" ||
+		actual.string() == "A2345D,B/KC*V67$IY," ||
+		actual.string() == "A2345D,B/KC*V67$IY", actual.string())
 
 	availableCode = map[byte]*cardColumn{
 		'L': codeFor('L'),
@@ -213,4 +196,53 @@ func (t *mainTestSuite) Test_hasRoads() {
 	} {
 		t.Assert().Equal(testdata.value, testdata.c.hasRoads(testdata.n), fmt.Sprintf("%c", testdata.c.c))
 	}
+}
+
+func (t *mainTestSuite) Test_switchCost() {
+	for _, testdata := range []struct {
+		cost    int
+		pos     int
+		dir     int
+		nextDir int
+		value   int
+	}{
+		{
+			1, 4, up, down, 11,
+		},
+		{
+			1, 3, up, down, 2,
+		},
+		{
+			1, 11, down, up, 2,
+		},
+		{
+			1, 10, down, up, 11,
+		},
+	} {
+		t.Assert().Equal(testdata.value, switchCost(testdata.cost, testdata.pos, testdata.dir, testdata.nextDir), fmt.Sprintf("pos: %d", testdata.pos))
+	}
+
+}
+
+func (t *mainTestSuite) Test_codeStatistics() {
+	bitsMap := make(map[int]int)
+	for _, c := range cardColumns {
+		bits := getBits(c.code)
+		for _, bit := range bits {
+			bitsMap[bit]++
+		}
+	}
+	for i := 0; i <= 11; i++ {
+		fmt.Printf("[%d] %d\n", i, bitsMap[i])
+	}
+}
+
+func (t *mainTestSuite) Test_log() {
+	d := newDeck("A2345D")
+	d.log()
+}
+
+func (t *mainTestSuite) Test_showDeck() {
+	d := newDeck("A2345D")
+	d.showDeck()
 }
