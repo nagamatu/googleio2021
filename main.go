@@ -210,6 +210,9 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 	if len(d) >= 8 && d[7].code != codeFor('B').code {
 		return nil, nil, fmt.Errorf("7th code must be 'B'")
 	}
+	if start < allowDown {
+		return nil, nil, fmt.Errorf("do not enter prohibit area")
+	}
 	for _, c := range availables {
 		if len(d) > 0 && d[len(d)-1].hasNeighbor(c) {
 			continue
