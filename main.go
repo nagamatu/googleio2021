@@ -35,75 +35,75 @@ func codeFor(c byte) *cardColumn {
 }
 
 var cardColumns = []*cardColumn{
-	{'0', valueOfBits(0)}, // 0
-	{'1', valueOfBits(1)},
-	{'2', valueOfBits(2)},
-	{'3', valueOfBits(3)},
-	{'4', valueOfBits(4)},
-	{'5', valueOfBits(5)},
-	{'6', valueOfBits(6)},
-	{'7', valueOfBits(7)},
-	{'8', valueOfBits(8)},
-	{'9', valueOfBits(9)},
+	{'0', valueOfBits(2)}, // 0
+	{'1', valueOfBits(3)},
+	{'2', valueOfBits(4)},
+	{'3', valueOfBits(5)},
+	{'4', valueOfBits(6)},
+	{'5', valueOfBits(7)},
+	{'6', valueOfBits(8)},
+	{'7', valueOfBits(9)},
+	{'8', valueOfBits(10)},
+	{'9', valueOfBits(11)},
 
-	{'A', valueOfBits(1, 11)}, // 10
-	{'B', valueOfBits(2, 11)},
-	{'C', valueOfBits(3, 11)},
-	{'D', valueOfBits(4, 11)},
-	{'E', valueOfBits(5, 11)},
-	{'F', valueOfBits(6, 11)},
-	{'G', valueOfBits(7, 11)},
-	{'H', valueOfBits(8, 11)},
-	{'I', valueOfBits(9, 11)},
-	{'J', valueOfBits(1, 12)},
-	{'K', valueOfBits(2, 12)},
-	{'L', valueOfBits(3, 12)},
-	{'M', valueOfBits(4, 12)},
-	{'N', valueOfBits(5, 12)},
-	{'O', valueOfBits(6, 12)},
-	{'P', valueOfBits(7, 12)},
-	{'Q', valueOfBits(8, 12)},
-	{'R', valueOfBits(9, 12)},
-	{'S', valueOfBits(0, 2)},
-	{'T', valueOfBits(0, 3)},
-	{'U', valueOfBits(0, 4)},
-	{'V', valueOfBits(0, 5)},
-	{'W', valueOfBits(0, 6)},
-	{'X', valueOfBits(0, 7)},
-	{'Y', valueOfBits(0, 8)},
-	{'Z', valueOfBits(0, 9)},
+	{'A', valueOfBits(3, 0)}, // 10
+	{'B', valueOfBits(4, 0)},
+	{'C', valueOfBits(5, 0)},
+	{'D', valueOfBits(6, 0)},
+	{'E', valueOfBits(7, 0)},
+	{'F', valueOfBits(8, 0)},
+	{'G', valueOfBits(9, 0)},
+	{'H', valueOfBits(10, 0)},
+	{'I', valueOfBits(11, 0)},
+	{'J', valueOfBits(3, 1)},
+	{'K', valueOfBits(4, 1)},
+	{'L', valueOfBits(5, 1)},
+	{'M', valueOfBits(6, 1)},
+	{'N', valueOfBits(7, 1)},
+	{'O', valueOfBits(8, 1)},
+	{'P', valueOfBits(9, 1)},
+	{'Q', valueOfBits(10, 1)},
+	{'R', valueOfBits(11, 1)},
+	{'S', valueOfBits(2, 4)},
+	{'T', valueOfBits(2, 5)},
+	{'U', valueOfBits(2, 6)},
+	{'V', valueOfBits(2, 7)},
+	{'W', valueOfBits(2, 8)},
+	{'X', valueOfBits(2, 9)},
+	{'Y', valueOfBits(2, 10)},
+	{'Z', valueOfBits(2, 11)},
 
-	{'&', valueOfBits(11)},
-	{'-', valueOfBits(12)},
-	{':', valueOfBits(2, 8)},
-	{'#', valueOfBits(3, 8)},
-	{'@', valueOfBits(4, 8)},
-	{'\'', valueOfBits(5, 8)},
-	{'=', valueOfBits(6, 8)},
-	{'"', valueOfBits(7, 8)},
-	{'c', valueOfBits(2, 8, 11)},
-	{'.', valueOfBits(3, 8, 11)},
-	{'<', valueOfBits(4, 8, 11)},
-	{'(', valueOfBits(5, 8, 11)},
-	{'+', valueOfBits(6, 8, 11)},
-	{'|', valueOfBits(7, 8, 11)},
-	{'!', valueOfBits(2, 8, 12)},
-	{'$', valueOfBits(3, 8, 12)},
-	{'*', valueOfBits(4, 8, 12)},
-	{')', valueOfBits(5, 8, 12)},
-	{';', valueOfBits(6, 8, 12)},
-	{'^', valueOfBits(7, 8, 12)},
-	{',', valueOfBits(0, 3, 8)},
-	{'%', valueOfBits(0, 4, 8)},
-	{'_', valueOfBits(0, 5, 8)},
-	{'>', valueOfBits(0, 6, 8)},
-	{'?', valueOfBits(0, 7, 8)},
-	{'/', valueOfBits(0, 1)}, // 61
+	{'&', valueOfBits(0)},
+	{'-', valueOfBits(1)},
+	{':', valueOfBits(4, 10)},
+	{'#', valueOfBits(5, 10)},
+	{'@', valueOfBits(6, 10)},
+	{'\'', valueOfBits(7, 10)},
+	{'=', valueOfBits(8, 10)},
+	{'"', valueOfBits(9, 10)},
+	{'c', valueOfBits(4, 10, 0)},
+	{'.', valueOfBits(5, 10, 0)},
+	{'<', valueOfBits(6, 10, 0)},
+	{'(', valueOfBits(7, 10, 0)},
+	{'+', valueOfBits(8, 10, 0)},
+	{'|', valueOfBits(9, 10, 0)},
+	{'!', valueOfBits(4, 10, 1)},
+	{'$', valueOfBits(5, 10, 1)},
+	{'*', valueOfBits(6, 10, 1)},
+	{')', valueOfBits(7, 10, 1)},
+	{';', valueOfBits(8, 10, 1)},
+	{'^', valueOfBits(9, 10, 1)},
+	{',', valueOfBits(2, 5, 10)},
+	{'%', valueOfBits(2, 6, 10)},
+	{'_', valueOfBits(2, 7, 10)},
+	{'>', valueOfBits(2, 8, 10)},
+	{'?', valueOfBits(2, 9, 10)},
+	{'/', valueOfBits(2, 3)}, // 61
 }
 
 func getBits(v int) []int {
 	bits := []int{}
-	for i := 0; i < 13; i++ {
+	for i := 0; i < 12; i++ {
 		if hasBit(v, i) {
 			bits = append(bits, i)
 		}
@@ -117,7 +117,7 @@ func (c *cardColumn) hasNeighbor(t *cardColumn) bool {
 
 func (c *cardColumn) hasRoads(start int) []int {
 	var roads []int = nil
-	if start < 9 && hasBit(c.code, start+1) {
+	if start < 11 && hasBit(c.code, start+1) {
 		roads = append(roads, start+1)
 	}
 	if start > 0 && hasBit(c.code, start-1) {
@@ -168,7 +168,7 @@ func getDirection(cur, next int) int {
 
 const logRateLimitSeconds = 1000 * 1000 * 1000
 
-var lastLogTime time.Time = time.Now()
+var lastLogTime time.Time = time.Now().Add(time.Duration(-logRateLimitSeconds))
 
 func (d deck) log() {
 	now := time.Now()
@@ -199,10 +199,18 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 				nextDir := getDirection(start, r)
 				count := switchCount
 				if dir != nextDir {
-					if start == 1 || start == 9 {
-						count++
+					if nextDir == down {
+						if start >= 4 {
+							count += 10
+						} else {
+							count++
+						}
 					} else {
-						count += 10
+						if start == 11 {
+							count++
+						} else {
+							count += 10
+						}
 					}
 				}
 				dd, aa, err := newDeck.doCode(copyMapExcept(availables, c.c), r, nextDir, count)
@@ -220,7 +228,7 @@ func (d deck) showDeck() {
 	for _, c := range d {
 		fmt.Printf("%c: ", c.c)
 		bits := getBits(c.code)
-		for i := 0; i < 13; i++ {
+		for i := 0; i < 12; i++ {
 			found := false
 			for _, bit := range bits {
 				if i == bit {
@@ -254,7 +262,7 @@ func main() {
 		}
 	}
 
-	d, _, err := d.doCode(availableCode, 4, up, 1)
+	d, _, err := d.doCode(availableCode, 6, up, 1)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed: %+v\n", err)
 		return

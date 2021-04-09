@@ -22,11 +22,11 @@ func (t *mainTestSuite) Test_getBits() {
 	}{
 		{
 			codeFor('A'),
-			[]int{1, 11},
+			[]int{0, 3},
 		},
 		{
 			codeFor('$'),
-			[]int{3, 8, 12},
+			[]int{1, 5, 10},
 		},
 	} {
 		t.Assert().Equal(testdata.bits, getBits(testdata.c.code))
@@ -41,17 +41,17 @@ func (t *mainTestSuite) Test_hasBit() {
 	}{
 		{
 			codeFor('A'),
-			1,
+			3,
 			true,
 		},
 		{
 			codeFor('A'),
-			11,
+			0,
 			true,
 		},
 		{
 			codeFor('A'),
-			5,
+			7,
 			false,
 		},
 	} {
@@ -112,9 +112,28 @@ func (t *mainTestSuite) Test_doCode() {
 		'K': codeFor('K'),
 		'C': codeFor('C'),
 	}
-	actual, _, err := d.doCode(availableCode, 4, up, 1)
+	actual, _, err := d.doCode(availableCode, 6, up, 1)
 	t.Assert().NoError(err, "A2345D$B/KC")
 	t.Assert().Equal("A2345D$B/KC", actual.string(), "A2345D$B/KC")
+
+	// A2345D$B/KC*V67,I8
+	availableCode = map[byte]*cardColumn{
+		'$': codeFor('$'),
+		'B': codeFor('B'),
+		'/': codeFor('/'),
+		'K': codeFor('K'),
+		'C': codeFor('C'),
+		'*': codeFor('*'),
+		'V': codeFor('V'),
+		'6': codeFor('6'),
+		'7': codeFor('7'),
+		',': codeFor(','),
+		'I': codeFor('I'),
+		'Y': codeFor('Y'),
+	}
+	actual, _, err = d.doCode(availableCode, 6, up, 1)
+	t.Assert().NoError(err, "A2345D,B/KC*V67YI$")
+	t.Assert().Equal("A2345D,B/KC*V67YI$", actual.string(), "A2345D,B/KC*V67YI$")
 
 	availableCode = map[byte]*cardColumn{
 		'L': codeFor('L'),
@@ -123,7 +142,7 @@ func (t *mainTestSuite) Test_doCode() {
 		'N': codeFor('N'),
 		',': codeFor(','),
 	}
-	_, _, err = d.doCode(availableCode, 4, up, 1)
+	_, _, err = d.doCode(availableCode, 6, up, 1)
 	t.Assert().Error(err, "No deck found")
 }
 
@@ -178,20 +197,20 @@ func (t *mainTestSuite) Test_hasRoads() {
 	}{
 		{
 			codeFor('D'),
-			3,
-			[]int{4},
+			5,
+			[]int{6},
 		},
 		{
 			codeFor('D'),
-			4,
+			6,
 			nil,
 		},
 		{
 			codeFor('D'),
-			5,
-			[]int{4},
+			7,
+			[]int{6},
 		},
 	} {
-		t.Assert().Equal(testdata.value, testdata.c.hasRoads(testdata.n))
+		t.Assert().Equal(testdata.value, testdata.c.hasRoads(testdata.n), fmt.Sprintf("%c", testdata.c.c))
 	}
 }
