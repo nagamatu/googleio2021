@@ -218,22 +218,7 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 			newDeck := append(d, c)
 			for _, r := range roads {
 				nextDir := getDirection(start, r)
-				count := switchCount
-				if dir != nextDir {
-					if nextDir == down {
-						if start == allowDown {
-							count++
-						} else {
-							count += 10
-						}
-					} else {
-						if start == allowUp {
-							count++
-						} else {
-							count += 10
-						}
-					}
-				}
+				count := switchCost(switchCount, start, dir, nextDir)
 				dd, aa, err := newDeck.doCode(copyMapExcept(availables, c.c), r, nextDir, count)
 				if err == nil {
 					return dd, aa, nil
