@@ -159,6 +159,8 @@ const (
 	maxSwitchCount = 9
 	allowDown      = 3
 	allowUp        = 11
+	firstDown      = 8
+	secondDown     = 19
 )
 
 func getDirection(cur, next int) int {
@@ -180,19 +182,34 @@ func (d deck) log() {
 	}
 }
 
-func switchCost(cost, pos, dir, nextDir int) int {
-	if dir != nextDir {
-		if nextDir == down {
-			if pos == allowDown {
-				cost++
-			} else {
-				cost += 10
-			}
+func switchCost(id, cost, pos, dir, nextDir int) int {
+	switch id {
+	case firstDown:
+		if nextDir != down {
+			cost += 10
 		} else {
-			if pos == allowUp {
-				cost++
+			cost++
+		}
+	case secondDown:
+		if nextDir != down {
+			cost += 10
+		} else {
+			cost++
+		}
+	default:
+		if dir != nextDir {
+			if nextDir == down {
+				if pos == allowDown {
+					cost++
+				} else {
+					cost += 10
+				}
 			} else {
-				cost += 10
+				if pos == allowUp {
+					cost++
+				} else {
+					cost += 10
+				}
 			}
 		}
 	}
@@ -221,7 +238,7 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 			newDeck := append(d, c)
 			for _, r := range roads {
 				nextDir := getDirection(start, r)
-				count := switchCost(switchCount, start, dir, nextDir)
+				count := switchCost(len(d), switchCount, start, dir, nextDir)
 				dd, aa, err := newDeck.doCode(copyMapExcept(availables, c.c), r, nextDir, count)
 				if err == nil {
 					return dd, aa, nil

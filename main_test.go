@@ -83,40 +83,36 @@ func (t *mainTestSuite) Test_hasCode() {
 func (t *mainTestSuite) Test_doCode() {
 	d := newDeck("A2345D")
 
-	//A2345D$B/KC*V67,:
+	// A2345D$BT<V
 	availableCode := map[byte]*cardColumn{
 		'$': codeFor('$'),
 		'B': codeFor('B'),
-		'/': codeFor('/'),
-		'K': codeFor('K'),
-		'C': codeFor('C'),
+		'T': codeFor('T'),
+		'<': codeFor('<'),
+		'V': codeFor('V'),
 	}
 	actual, _, err := d.doCode(availableCode, 6, up, 1)
-	t.Assert().NoError(err, "A2345D$B/KC")
-	t.Assert().Equal("A2345D$B/KC", actual.string(), "A2345D$B/KC")
+	t.Assert().NoError(err, "A2345D$BT<V")
+	t.Assert().Equal("A2345D$BT<V", actual.string(), "A2345D$BT<V")
 
-	// A2345D$B/KC*V67,I8
+	// A2345D$BT<VFXHZ:G=
 	availableCode = map[byte]*cardColumn{
 		'$': codeFor('$'),
 		'B': codeFor('B'),
-		'/': codeFor('/'),
-		'K': codeFor('K'),
-		'C': codeFor('C'),
-		'*': codeFor('*'),
+		'T': codeFor('T'),
+		'<': codeFor('<'),
 		'V': codeFor('V'),
-		'6': codeFor('6'),
-		'7': codeFor('7'),
-		',': codeFor(','),
-		'I': codeFor('I'),
-		'Y': codeFor('Y'),
+		'F': codeFor('F'),
+		'X': codeFor('X'),
+		'H': codeFor('H'),
+		'Z': codeFor('Z'),
+		':': codeFor(':'),
+		'G': codeFor('G'),
+		'=': codeFor('='),
 	}
 	actual, _, err = d.doCode(availableCode, 6, up, 1)
 	t.Assert().NoError(err)
-	t.Assert().True(actual.string() == "A2345D,B/KC*V67YI$" ||
-		actual.string() == "A2345D$B/KC*V67YI," ||
-		actual.string() == "A2345D$B/KC*V67,IY" ||
-		actual.string() == "A2345D,B/KC*V67$IY," ||
-		actual.string() == "A2345D,B/KC*V67$IY", actual.string())
+	t.Assert().True(actual.string() == "A2345D$BT<VFXHZ:G=" || actual.string() == "A2345D$BT<V=G:ZHXF", actual.string())
 
 	availableCode = map[byte]*cardColumn{
 		'L': codeFor('L'),
@@ -219,7 +215,7 @@ func (t *mainTestSuite) Test_switchCost() {
 			1, 10, down, up, 11,
 		},
 	} {
-		t.Assert().Equal(testdata.value, switchCost(testdata.cost, testdata.pos, testdata.dir, testdata.nextDir), fmt.Sprintf("pos: %d", testdata.pos))
+		t.Assert().Equal(testdata.value, switchCost(0, testdata.cost, testdata.pos, testdata.dir, testdata.nextDir), fmt.Sprintf("pos: %d", testdata.pos))
 	}
 
 }
