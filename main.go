@@ -160,7 +160,7 @@ const (
 	allowDown      = 3
 	allowUp        = 11
 	firstDown      = 8
-	secondDown     = 19
+	secondDown     = 19 // or 19 + 16 == 35
 )
 
 func getDirection(cur, next int) int {
@@ -180,6 +180,16 @@ func (d deck) log() {
 		d.showDeck()
 		lastLogTime = now
 	}
+}
+
+func (d deck) getAvailableMap() map[byte]*cardColumn {
+	m := make(map[byte]*cardColumn)
+	for _, c := range cardColumns {
+		if !d.hasCode(c) {
+			m[c.c] = c
+		}
+	}
+	return m
 }
 
 func switchCost(id, cost, pos, dir, nextDir int) int {
@@ -216,13 +226,25 @@ func switchCost(id, cost, pos, dir, nextDir int) int {
 	return cost
 }
 
+func (d deck) count8(availables map[byte]*cardColumn) int {
+	count := 0
+	for _, c := range availables {
+		if hasBit(c.code, 10) {
+			count++
+		}
+	}
+	return count
+}
+
 func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount int) (deck, map[byte]*cardColumn, error) {
 	d.log()
+	last := d[len(d)-1]
+	if !hasBit(last.code, start) {
+		d.showDeck()
+		panic(fmt.Errorf("invalid start point: %d", start))
+	}
 	if len(availables) == 0 {
 		return d, availables, nil
-	}
-	if switchCount >= maxSwitchCount {
-		return nil, nil, fmt.Errorf("too many direction switch")
 	}
 	if len(d) >= 8 && d[7].code != codeFor('B').code {
 		return nil, nil, fmt.Errorf("7th code must be 'B'")
@@ -230,6 +252,12 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 	if start < allowDown {
 		return nil, nil, fmt.Errorf("do not enter prohibit area")
 	}
+
+	sum := d.count8(availables)
+	if (62-len(d))/2 < sum {
+		return nil, nil, fmt.Errorf("no MORE 8")
+	}
+
 	for _, c := range availables {
 		if len(d) > 0 && d[len(d)-1].hasNeighbor(c) {
 			continue
@@ -239,6 +267,9 @@ func (d deck) doCode(availables map[byte]*cardColumn, start, dir, switchCount in
 			for _, r := range roads {
 				nextDir := getDirection(start, r)
 				count := switchCost(len(d), switchCount, start, dir, nextDir)
+				if count > maxSwitchCount {
+					continue
+				}
 				dd, aa, err := newDeck.doCode(copyMapExcept(availables, c.c), r, nextDir, count)
 				if err == nil {
 					return dd, aa, nil
@@ -258,38 +289,36 @@ func newDeck(s string) deck {
 	return d
 }
 
+func (c *cardColumn) show() {
+	fmt.Printf("%c: ", c.c)
+	bits := getBits(c.code)
+	for i := 0; i < 12; i++ {
+		found := false
+		for _, bit := range bits {
+			if i == bit {
+				found = true
+				break
+			}
+		}
+		if found {
+			fmt.Printf("* ")
+		} else {
+			fmt.Printf(". ")
+		}
+	}
+	fmt.Printf("\n")
+}
+
 func (d deck) showDeck() {
 	fmt.Printf("%s\n", d.string())
 	for _, c := range d {
-		fmt.Printf("%c: ", c.c)
-		bits := getBits(c.code)
-		for i := 0; i < 12; i++ {
-			found := false
-			for _, bit := range bits {
-				if i == bit {
-					found = true
-					break
-				}
-			}
-			if found {
-				fmt.Printf("* ")
-			} else {
-				fmt.Printf(". ")
-			}
-		}
-		fmt.Printf("\n")
+		c.show()
 	}
 }
 
 func main() {
 	d := newDeck("A2345D")
-	availableCode := make(map[byte]*cardColumn)
-	for _, c := range cardColumns {
-		if !d.hasCode(c) {
-			availableCode[c.c] = c
-		}
-	}
-
+	availableCode := d.getAvailableMap()
 	d, _, err := d.doCode(availableCode, 6, up, 1)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed: %+v\n", err)
